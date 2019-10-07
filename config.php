@@ -23,14 +23,14 @@ Ec2nagiosConfig::set_accounts(array('project' => array(
 		'secret' => 'secret-key',
 	), ));
 
-Ec2nagiosConfig::set_host_name_template('${dnsName}');
+Ec2nagiosConfig::set_host_name_template('${tag.Name}@${projectName}');
 
 Ec2nagiosConfig::set_host_template(
-<<<EOT
+    <<<EOT
 define host{
-	use             linux-server
-        host_name       \${hostName}
-        alias           \${tag.Name}
+    use             linux-server
+        host_name       \${tag.Name}@\${projectName}
+        alias           \${hostName}
         address         \${dnsName}
         }
 
