@@ -26,9 +26,9 @@ Ec2nagiosConfig::set_accounts(array('project' => array(
 Ec2nagiosConfig::set_host_name_template('${tag.Name}@${projectName}');
 
 Ec2nagiosConfig::set_host_template(
-    <<<EOT
+<<<EOT
 define host{
-    use             linux-server
+    use linux-server
         host_name       \${tag.Name}@\${projectName}
         alias           \${hostName}
         address         \${dnsName}
