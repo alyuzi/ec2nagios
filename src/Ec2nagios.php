@@ -80,9 +80,7 @@ class Ec2nagios {
 					}
 				}
 			}
-
 		}
-print_r($groups);
 		return $groups;
 
 	}
