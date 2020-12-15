@@ -72,14 +72,18 @@ class Ec2nagios {
 					$variables = self::extract_variables($instance);
 					$variables['projectName'] = $project;
 					$variables['groupName'] = $group_name;
-					if (preg_match('/^.+auto-scaling.*$/i', $variables['tag.Name'])) {
+					if (preg_match('/^.+auto-scaling$/i', $variables['tag.Name'])) {
 						$variables['tag.Name'] = $variables['tag.Name'] . '-' . $instance_number;
+						while (isset($groups[$group_name][$variables['tag.Name']])) {
+							$instance_number++;
+							$variables['tag.Name'] = $variables['tag.Name'] . '-' . $instance_number;
+						}
 						$ec2->create_tags($variables['instanceId'], array(
 							array('Key' => 'Name', 'Value' => $variables['tag.Name']),
 						));
-						$groups[$group_name][] = $variables;
+						$groups[$group_name][$variables['tag.Name']] = $variables;
 					} else {
-						$groups[$group_name][] = $variables;
+						$groups[$group_name][$variables['tag.Name']] = $variables;
 					}
 				}
 			}
