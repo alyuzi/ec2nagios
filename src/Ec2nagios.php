@@ -73,11 +73,12 @@ class Ec2nagios {
 					$variables['projectName'] = $project;
 					$variables['groupName'] = $group_name;
 					if (preg_match('/^.+auto-scaling$/i', $variables['tag.Name'])) {
-						$variables['tag.Name'] = $variables['tag.Name'] . '-' . $instance_number;
-						while (isset($groups[$group_name][$variables['tag.Name']])) {
+						$instance_name = $variables['tag.Name'] . '-' . $instance_number;
+						while (isset($groups[$group_name][$instance_name])) {
 							$instance_number++;
-							$variables['tag.Name'] = $variables['tag.Name'] . '-' . $instance_number;
+							$instance_name = $variables['tag.Name'] . '-' . $instance_number;
 						}
+						$variables['tag.Name'] = $instance_name;
 						$ec2->create_tags($variables['instanceId'], array(
 							array('Key' => 'Name', 'Value' => $variables['tag.Name']),
 						));
