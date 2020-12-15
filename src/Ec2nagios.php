@@ -61,6 +61,7 @@ class Ec2nagios {
 			if (!$instances->isOK())
 				continue;
 
+			$instance_number = 1;
 			foreach ($instances->body->reservationSet->children() as $reservationItem) {
 				foreach ($reservationItem->instancesSet->children() as $instance) {
 					if ($instance->instanceState->name->to_string() != 'running')
@@ -71,12 +72,17 @@ class Ec2nagios {
 					$variables = self::extract_variables($instance);
 					$variables['projectName'] = $project;
 					$variables['groupName'] = $group_name;
-					$groups[$group_name][] = $variables;
+					if (preg_match('/^.+auto-scaling.*$/i', $variables['tag.Name'])) {
+						$variables['tag.Name'] = $variables['tag.Name'] . '-' . $instance_number;
+						$groups[$group_name][] = $variables;
+					} else {
+						$groups[$group_name][] = $variables;
+					}
 				}
 			}
 
 		}
-
+print_r($groups);
 		return $groups;
 
 	}
